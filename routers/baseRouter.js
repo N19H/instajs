@@ -29,15 +29,65 @@ router.get('/signup', function(req, res) {
         res.render('signup.ejs');
 });
 
+router.post('/signup', function (req, res){
+ var username = req.body.username;
+ var password = req.body.password;
+ var firstname = req.body.firstname;
+ var surname = req.body.surname;
+ var email = req.body.email;
+
+  req.getConnection(function(err, connection){
+    if(err){ return next(err); }
+
+    connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
+                if (err) {
+                    console.log('oeps');
+                    res.redirect('/signup');
+                }
+                if (rows.length) {
+                    res.redirect('/signup');
+                } else {
+                    // if there is no user with that username
+                    // create the user
+                    var newUserMysql = {
+                        username: username,
+                        password: password,
+                        email: email,
+                        firstname: firstname,
+                        surname: surname
+                    // use the generateHash function in our user model
+                    };
+                    console.log(newUserMysql);
+
+                    var insertQuery = "INSERT INTO users (username, password, firstname, surname, email) values (?,?,?,?,?)";
+
+                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password, newUserMysql.firstname, newUserMysql.surname, newUserMysql.email],function(err, rows) {
+                        newUserMysql.id = rows.insertId;
+
+                        res.redirect('/profile');
+                    });
+                }
+            });
+  });
+
+   
+
+ req.session.username = username;
+
+ console.log(username);
+
+});
 
 router.get('/login', function(req, res) {
   res.render('login', {title: 'Log in'});
 });
 
-router.post('/login',
-  passport.authenticate('local', { successRedirect: '/profile',
-                                   failureRedirect: '/login' 
-}));
+router.post('/login', function(req, res) {
+  passport.authenticate('local-login', {req: req, successRedirect: '/profile',
+                                   failureRedirect: '/login'
+
+  });
+});
 
 router.get('/logout', function(req, res) {
 
