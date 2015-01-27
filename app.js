@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var mysql = require('mysql');
 var myConnection = require('express-myconnection');
+var flash = require('connect-flash');
+var cookieparser = require("cookieparser");
 
 //  =================
 //  = Setup the app FONSIE
@@ -36,12 +38,13 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // Setup bodyparser
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Setup Multer
-app.use(multer({ dest: './uploads/',
+app.use(multer({ dest: './',
  rename: function (fieldname, filename) {
     return filename+Date.now();
   },

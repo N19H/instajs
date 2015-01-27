@@ -52,14 +52,21 @@
     <div id="container">
 	  
 		<div id="gal1">
-		    <img src="assets/img/test1.jpg"
-		        alt="Title here"
-		        title="nickyhogendorp"
-		        data-desc=""
-		        data-category="image category here"
-		        data-fullsrc="assets/img/test1.jpg"
-		    />
+                <% photos.forEach(function(photo, index) { %>
+
+                <img src="/<%= photo.filename %>"  
+                     alt="Title here"
+                     title="nickyhogendorp"
+                     data-desc=""
+                     data-category="image category here"
+                     data-fullsrc="/<%= photo.filename %>" 
+                />
+                
+                <%  }); %>
 		</div>
+
+
+
 	  
 	</div>
 
