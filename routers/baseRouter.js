@@ -35,11 +35,11 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login',
-  passport.authenticate('local', { successRedirect: '/user',
+  passport.authenticate('local', { successRedirect: '/profile',
                                    failureRedirect: '/login' 
 }));
 
-router.post('/logout', function(req, res) {
+router.get('/logout', function(req, res) {
 
   // req.session.destroy();
   req.logout();

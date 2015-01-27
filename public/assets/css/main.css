@@ -218,3 +218,40 @@ body {
 	background: #250a33 !important;
 	font-family: "Open Sans";
 }
+
+/*  =================
+	= RANDOM =
+  	=================
+*/
+
+.upload {
+	width: 25%;
+	margin: 2em auto;
+	font-family: "Open Sans";
+	padding-left: 1em;
+}
+
+.upload h1 {
+	margin: 0 0 0.5em 0;
+}
+
+.upload textarea {
+	border: 1px solid #ccc;
+	width: 29.5em;
+	height: 6em;
+	padding: 1em;
+	font-size: 1em;
+	margin: 2em 0 1em 0;
+}
+
+.upload input[type="submit"] {
+	padding: 0.8em;
+	font-size: 1em;
+	border: none;
+	cursor: pointer;
+}
+
+.upload input[type="submit"]:hover {
+	background: #250a33;
+	color: white;
+}
