@@ -86,8 +86,3 @@ app.get('/', function(req, res){
 app.listen(3000, function(){
   console.log('App listening at http://localhost:3000');
 });
-
-// gekke dingen geziennnnn
-
-console.log('test');
-console.log('o o 0');
