@@ -249,6 +249,7 @@ body {
 	font-size: 1em;
 	border: none;
 	cursor: pointer;
+	border-radius: 3px;
 }
 
 .upload input[type="submit"]:hover {
