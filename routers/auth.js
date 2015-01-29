@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 
 passport.use('local-login', new LocalStrategy(
     function(username, password, done) {
+        console.log('gogo');
         if (username) {
             console.log(username);
             var pass = password;

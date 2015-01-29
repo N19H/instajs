@@ -40,7 +40,7 @@
 
 				<img src="assets/img/anonymous.jpg" class="profile-pic" alt="Profile picture" />
 
-				<a href="profile" class="username">nickyhogendorp</a>
+				<a href="profile" class="username"><%= req.session.username %></a>
 
 				<a style="margin-left: 50px;" href="logout" class="username">Uitloggen</a>
 
@@ -74,7 +74,7 @@
 					<div class="user-info">
 				
 						<ul>
-							<li class="user"><a href="user">nickyhogendorp</a></li>
+							<li class="user"><a href="user"><%= req.session.username %></a></li>
 							<li class="user-picture"><a href="user"><img src="assets/img/anonymous.jpg" alt="Profile picture" /></a></li>
 						</ul>
 

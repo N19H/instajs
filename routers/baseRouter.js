@@ -82,25 +82,45 @@ router.get('/login', function(req, res) {
   res.render('login', {title: 'Log in'});
 });
 
-router.post('/login', function(req, res) {
-  passport.authenticate('local-login', {req: req, successRedirect: '/profile',
-                                   failureRedirect: '/login'
-
-  });
+router.post('/login', function(req, res){
+   var username = req.body.username;
+   var password = req.body.password;
+   
+   req.getConnection(function(err, connection){
+      if(err){ next(err); }
+       
+      connection.query('SELECT * FROM users WHERE username = \'' + username + '\' AND password = \'' + password + '\'', function(err, match){
+          if(err){ next(err); }
+          
+          if(match != ''){
+              req.session.username = username;
+              res.redirect('/profile');
+          } else {
+              var data = {
+                  req: req,
+                  error: 'Gebruikersnaam en/of wachtwoord is fout.'
+              }
+              res.redirect('/login');
+      
+        }
+      })
+   }); 
 });
 
 router.get('/logout', function(req, res) {
 
-  // req.session.destroy();
-  req.logout();
+  req.session.destroy();
+  // req.logout();
 
   res.redirect('/');
 });
 
-router.get('/profile', isLoggedIn, function(req, res) {
+router.get('/profile', function(req, res) {
+        if (req.session.username) {
         res.render('profile.ejs', {
-            user: req.user // get the user out of session and pass to template
+            user: req.user, req:req // get the user out of session and pass to template
         });
+      } else { res.redirect('/login');}
     });
 
 router.get('/user', function(req, res) {
