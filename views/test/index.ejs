@@ -39,8 +39,17 @@
 
 			<div class="top-info">
 
+            <% if (req.session.username) { %>
+
+            <img src="assets/img/anonymous.jpg" class="profile-pic" alt="Profile picture" />
+            <a href="/profile" class="username"><%= req.session.username %></a>
+
+            <a style="margin-left: 20px;" href="/logout" class="username">Logout</a>
+            <% } else { %>
+
 				<a href="login" class="username">Inloggen</a>
                 <a style="margin-left: 20px;" href="signup" class="username">Registeren</a>
+            <% } %>
 
 			</div>
 
@@ -54,9 +63,9 @@
 		<div id="gal1">
                 <% photos.forEach(function(photo, index) { %>
 
-                <img src="/<%= photo.filename %>"  
+                <img src="<%= photo.filename %>"  
                      alt="Title here"
-                     title="nickyhogendorp"
+                     title="<%= photo.caption %>"
                      data-desc=""
                      data-category="image category here"
                      data-fullsrc="/<%= photo.filename %>" 

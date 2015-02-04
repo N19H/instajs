@@ -16,7 +16,49 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/upload', function(req, res) {
-	res.render('test/upload', {req:req});
+  res.render('test/upload', {req:req});
+});
+
+router.post('/upload', function(req, res){
+    var username = req.session.username,
+        caption = req.body.caption,
+        userId,
+        upload = req.files,
+        naam = upload.userPhoto.originalname + Date.now();
+
+        console.log(upload);
+        console.log(upload.userPhoto.name);
+        console.log(upload.userPhoto.originalname);
+        console.log(caption);
+
+
+
+    req.getConnection(function(err, connection){
+        if(err){ next(err); }
+
+        connection.query('SELECT id FROM users WHERE username = \'' + username + '\'', function(err, correct){
+
+            if(err){ next(err); }
+
+            if(correct != '' && upload.userPhoto.name && caption != null) {
+
+                userId = correct[0].id
+
+                connection.query('INSERT INTO photos (user_id, caption, filename) VALUES (\'' + userId + '\',\'' + caption + '\',\'' + upload.userPhoto.name + '\')', function(err, user) {
+                    if(err){
+                        console.error(err);
+                        return next(err);
+                    }
+
+                    res.redirect('/profile');
+                });
+            } else {
+                res.render('/profile', {
+                    error: "Er ging wat fout met het uploaden, geeeeeeen idee wat.", req:req
+                });
+            }
+        });
+    });
 });
 
 router.post('/', function(req,res) {
@@ -78,6 +120,24 @@ router.post('/signup', function (req, res){
 
 });
 
+// router.post('/comment', function (req, res){
+//  var comment = req.body.comment;
+//  var photoId = req.body.photoId;
+ 
+//   req.getConnection(function(err, connection){
+//     if(err){ return next(err); }
+
+
+//                     var insertQuery = "INSERT INTO comments (comment, photoId) values (?,?)";
+
+//                     connection.query(insertQuery,[comment, photoId],function(err, rows) {
+                        
+//                         res.redirect('/profile');
+//                     });
+             
+//             });
+//   });
+
 router.get('/login', function(req, res) {
   res.render('login', {title: 'Log in'});
 });
@@ -85,15 +145,28 @@ router.get('/login', function(req, res) {
 router.post('/login', function(req, res){
    var username = req.body.username;
    var password = req.body.password;
+   var userid;
    
+
    req.getConnection(function(err, connection){
       if(err){ next(err); }
        
+        var queryString = 'SELECT id FROM users WHERE username =  \'' + username + '\'';
+ 
+    connection.query(queryString, function(err, rows, fields) {
+    if (err) throw err;
+ 
+    for (var i in rows) {
+        console.log('userid: ', rows[i].id);
+        userid = rows[i].id;
+    }
+  });
       connection.query('SELECT * FROM users WHERE username = \'' + username + '\' AND password = \'' + password + '\'', function(err, match){
           if(err){ next(err); }
           
           if(match != ''){
               req.session.username = username;
+              req.session.userId = userid; 
               res.redirect('/profile');
           } else {
               var data = {
@@ -117,9 +190,14 @@ router.get('/logout', function(req, res) {
 
 router.get('/profile', function(req, res) {
         if (req.session.username) {
-        res.render('profile.ejs', {
-            user: req.user, req:req // get the user out of session and pass to template
-        });
+        req.getConnection(function(err, connection){
+    if(err){ return next(err); }
+
+    connection.query('SELECT * FROM photos', function(err, photos){
+      if(err){ return next(err); }
+      res.render('profile', {photos: photos, req:req});
+    });
+  });
       } else { res.redirect('/login');}
     });
 

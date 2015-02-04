@@ -57,7 +57,7 @@
 
 	    		<h1>+ Nieuwe foto</h1>
 
-				<form id="uploadForm" enctype = "multipart/form-data" action = "/" %>" method = "post">
+				<form id="uploadForm" enctype = "multipart/form-data" action = "/upload" method = "post">
 
 				<input type="file" name="userPhoto" />
 
@@ -69,7 +69,10 @@
 
 			</div>
 
-			<div class="item-post">
+			<% photos.forEach(function(photo, index) {
+			if(photo.user_id === req.session.userId) { %>
+
+              <div class="item-post">
 
 					<div class="user-info">
 				
@@ -82,10 +85,10 @@
 
 					<div class="photo-info">
 						
-						<img src="assets/img/test1.jpg" alt="Test" />	
+						<img src="<%= photo.filename %>" alt="Test" />	
 
 						<p class="description">
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
+							<%= photo.caption %>
 						</p>
 
 						<div class="comments">
@@ -105,9 +108,10 @@
 
 							<div class="write-comment">
 									
-								<form action="" method="POST">
+								<form action="/comment" method="POST">
 
 									<input type="text" id="writecomment" name="comment" placeholder="Write comment..." />
+									<input type="hidden" name="photoId" value="<%= photo.id %>" />
 
 								</form>
 
@@ -118,6 +122,10 @@
 					</div>
 
 			</div>
+                
+                <% } }); %>
+
+			
 
     </div>
 
